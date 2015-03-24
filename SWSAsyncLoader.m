@@ -1,37 +1,31 @@
 //
-//  AsyncLoader.m
-//  DiscussionForum
+//  SWSAsyncLoader.m
+//  SavePhotosOnAWS
 //
-//  Created by Akshay on 05/04/13.
-//  Copyright (c) 2013 QCD Systems LLC. All rights reserved.
+//  Created by Steven Shatz on 3/18/15.
+//  Copyright (c) 2015 Steven Shatz. All rights reserved.
 //
 
+#import "SWSAsyncLoader.h"
+#import "SWSConstants.h"
 
+#define LOG_HTTP_ACTIONS NO         // Set to YES to see HTTP POST requests and results
+#define LOG_LOADER_ACTIONS YES      // Set to YES to see SAVE_IMAGE, DELETE_IMAGE, and other actions
 
-#import "AsyncLoader.h"
-#import "Constants.h"
+@interface SWSAsyncLoader ()
 
-
-#define LIST_FILES @"ListFiles"
-#define LOAD_IMAGE @"LoadImage"
-#define BACKGROUND_LOAD_IMAGE @"BackgroundLoadImage"
-#define SAVE_IMAGE @"SaveImage"
-#define DELETE_IMAGE @"DeleteImage"
-
-#define HTTP_DEBUG NO           // Set to YES to see HTTP POST requests and results
-
-
-@interface AsyncLoader ()
+@property (nonatomic,copy) NSString *params;
 
 @property (nonatomic) id delegate;
-@property (nonatomic) NSString *params;
 
-@property (nonatomic)  NSString *url;
+-(void)p_displayHTTPFieldsForRequest:(NSURLRequest *)request;
+
+-(void)p_requestMethod:(NSURLRequest *)request withRetryCounter:(int)retryCounter;
 
 @end
 
 
-@implementation AsyncLoader
+@implementation SWSAsyncLoader
 
 //-(void)setUpURLSession {
 //    self.completionHandlerDictionary = [NSMutableDictionary dictionaryWithCapacity:0];
@@ -51,22 +45,39 @@
 //    //[self.defaultSession invalidateAndCancel];
 //}
 
+
 //This routine is for all AWS requests other than SAVE_IMAGE
--(void)load:(NSString*)anUrl txt:(NSString*)txt delegate:(id)dg params:(NSString*)params {
-    NSLog(@"..................%s, params:%@",__FUNCTION__, params);
+-(void)load:(NSString*)aUrl txt:(NSString*)txt delegate:(id)dg imageName:(NSString *)imageName {
+    
+    if (LOG_METHOD_NAMES) {NSLog(@"[METHOD:] %s, params:%@",__FUNCTION__, imageName);}
+    
     self.textTag = txt;
     self.delegate = dg;
-    self.params = params;
+    self.imageName = imageName;
+    self.params = nil;
     
-//    NSLog(@"URL:%@",anUrl);
-//    NSLog(@"PARAMS:%@",params);
+    if ([self.textTag isEqualToString:BACKGROUND_LOAD_IMAGE]) {
+        self.params = [NSString stringWithFormat:@"getFile=uploads/%@",imageName];
+        
+    } else if ([self.textTag isEqualToString:LOAD_IMAGE]) {
+        self.params = [NSString stringWithFormat:@"getFile=uploads/%@",imageName];
+        
+    } else if ([self.textTag isEqualToString:LIST_FILES]) {
+        self.params = [NSString stringWithFormat:@"listFile=uploads/"];
+        
+    } else if ([self.textTag isEqualToString:DELETE_IMAGE]) {
+        self.params = [[NSString alloc] initWithFormat:@"delFile=%@",imageName];
+        
+    } else {
+        return;
+    }
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:anUrl]
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:aUrl]
                                                            cachePolicy:NSURLRequestReturnCacheDataElseLoad
-                                                       timeoutInterval:10];
+                                                       timeoutInterval:15]; // 15 seconds
     request.HTTPMethod = @"POST";
     
-    NSData *ndata = [params dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *ndata = [self.params dataUsingEncoding:NSUTF8StringEncoding];
     
     // Append to an HTTP header field (filling in values for certain keys)
     [request addValue:@"8bit" forHTTPHeaderField:@"Content-Transfer-Encoding"];
@@ -75,34 +86,38 @@
     
     [request setHTTPBody:ndata];
     
-    if (HTTP_DEBUG) {[self displayHTTPFieldsForRequest:request];}
+    [self p_displayHTTPFieldsForRequest:request];
     
-    [self requestMethod:request withRetryCounter:5];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
+        [self p_requestMethod:request withRetryCounter:5];
+    });
 }
 
 //This routine is only invoked by SAVE_IMAGE
--(void)load:(NSString*)anUrl txt:(NSString*)txt delegate:(id)dg paramKeys:(NSArray*)keys paramVals:(NSArray*)vals
+-(void)load:(NSString*)aUrl txt:(NSString*)txt delegate:(id)dg paramKeys:(NSArray*)keys paramVals:(NSArray*)vals
       image:(UIImage*)image imageName:(NSString *)imageName {
     
-    NSLog(@"..................%s",__FUNCTION__);
+    if (LOG_METHOD_NAMES) {NSLog(@"[METHOD:] %s",__FUNCTION__);}
     
     if (!image) {
+        if (LOG_METHOD_NAMES) {NSLog(@"[METHOD:] - Missing Image");}
         return;
     }
 
     self.textTag = txt;
+    self.delegate = dg;
     self.image = image;
     self.imageName = imageName;
-    self.params = imageName;    //for requestMethod:withRetryCounter:
+    self.params = imageName;
     
     if (self.imageName == nil) {
         self.imageName = [[NSString alloc] initWithFormat:@"%f.jpg", [[NSDate date] timeIntervalSince1970]];  // Use number of secs since 1/1/1970 as filename
-        if (HTTP_DEBUG) {NSLog(@"\ndata: %@\n",self.imageName);}
+        if (LOG_METHOD_NAMES) {NSLog(@"[METHOD:] -  Assigned Image Name: %@",self.imageName);}
     }
     
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:anUrl]
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:aUrl]
                                                            cachePolicy:NSURLRequestReturnCacheDataElseLoad
-                                                       timeoutInterval:10];
+                                                       timeoutInterval:15]; // 15 seconds
     request.HTTPMethod = @"POST";
     
 	//Add content-type to Header. Need to use a string boundary for data uploading.
@@ -139,16 +154,20 @@
 	
 	// set the body of the post to the request
 	[request setHTTPBody:body];
+
+    [self p_displayHTTPFieldsForRequest:request];
     
-    if (HTTP_DEBUG) {[self displayHTTPFieldsForRequest:request];}
-    
-    [self requestMethod:request withRetryCounter:5];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
+        [self p_requestMethod:request withRetryCounter:5];
+    });
 }
 
--(void)requestMethod:(NSURLRequest *)request withRetryCounter:(int)retryCounter {
-    NSLog(@"%s retryCounter:%d", __FUNCTION__, retryCounter);
+-(void)p_requestMethod:(NSURLRequest *)request withRetryCounter:(int)retryCounter {
+    if (LOG_METHOD_NAMES) {NSLog(@"[METHOD:] %s retryCounter:%d", __FUNCTION__, retryCounter);}
+    
     if (retryCounter <= 0) {
         NSLog(@"\nWARNING: request failed after max retries --> Type:%@, Params:%@", self.textTag, self.params);
+        [self.delegate loaderDidFail:self];
         return;
     }
     retryCounter--;
@@ -159,10 +178,10 @@
                                        queue:[NSOperationQueue new]
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
                                if (connectionError) {
-                                   NSLog(@"\nConnection error: %@\nType:%@, Params:%@",connectionError, self.textTag, self.params);
+                                   NSLog(@"\nCONNECTION ERROR: %@\nType:%@, Params:%@",connectionError, self.textTag, self.params);
                                    
                                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul), ^{
-                                       [weakSelf requestMethod:request withRetryCounter:retryCounter];
+                                       [weakSelf p_requestMethod:request withRetryCounter:retryCounter];
                                    });
                                    return;
                                }
@@ -170,7 +189,6 @@
                                if ([self.textTag isEqualToString:BACKGROUND_LOAD_IMAGE]) {
                                    self.image = [[UIImage alloc] initWithData:data];
                                    self.imageName = [self.params stringByReplacingOccurrencesOfString:@"getFile=uploads/" withString:@""];
-                                   if (HTTP_DEBUG) {NSLog(@"Image Name: %@\n",self.imageName);}
                                    
                                } else if ([self.textTag isEqualToString:LOAD_IMAGE]) {
                                    self.image = [[UIImage alloc] initWithData:data];
@@ -179,11 +197,10 @@
                                    self.ldData = data;
                                    
                                } else if ([self.textTag isEqualToString:DELETE_IMAGE]) {
-                                   self.imageName = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-                                   if (HTTP_DEBUG) {NSLog(@"\ndata: %@\n",self.imageName);}
+                                   //do nothing - for possible future use
                                    
                                } else if ([self.textTag isEqualToString:SAVE_IMAGE]) {
-                                   //do nothing
+                                   //do nothing - for possible future use
                                    
                                } else {
                                    return;
@@ -193,27 +210,31 @@
                            }];
 }
 
--(void)displayHTTPFieldsForRequest:(NSURLRequest *)request {
+-(void)p_displayHTTPFieldsForRequest:(NSURLRequest *)request {
+    if (!LOG_HTTP_ACTIONS) {
+        return;
+    }
     NSDictionary *dict = [request allHTTPHeaderFields];
     NSArray *dictKeys = [dict allKeys];
     NSArray *dictValues = [dict allValues];
-    NSMutableString *strH = [[NSMutableString alloc] init];
+    NSMutableString *strH = [NSMutableString new];
     for (int i=0; i<[dictKeys count]; ++i) {
         [strH appendFormat:@" - %@ : %@\n",dictKeys[i],dictValues[i]];
     }
     NSString *strB = [[NSString alloc] initWithData:[request HTTPBody] encoding:NSASCIIStringEncoding];
-    if (HTTP_DEBUG) {
-        NSLog(@"\nRequest:%@",[[request URL] absoluteString]);
-        NSLog(@"HTTP Method:%@",[request HTTPMethod]);
-        NSLog(@"HTTP Body:%@",strB);
-        NSLog(@"HTTP Header:\n%@",strH);
-    }
+    NSLog(@"\n");
+    NSLog(@"[HTTP:] Request:%@",[[request URL] absoluteString]);
+    NSLog(@"        Method:%@",[request HTTPMethod]);
+    NSLog(@"        Body:%@",strB);
+    NSLog(@"        Header:%@",strH);
 }
 
--(NSString *)encode:(NSString *)str {
+-(NSString *)encode:(NSString *)string {
+    if (LOG_METHOD_NAMES) {NSLog(@"[METHOD:] Asyncloader Encode string: %@",string);}
+    
     NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
         NULL,                                   // CFAllocatorRef object (allocates memory)
-        (CFStringRef)str,                       // URL string to be adjusted
+        (CFStringRef)string,                    // URL string to be adjusted
         NULL,                                   // List of chars that should NOT be escaped
         (CFStringRef)@"!*'();:@&=+$,/?%#[]",    // List of chars that need to be % escaped
         kCFStringEncodingUTF8                   // Type of encoding to use for new URL string
@@ -222,7 +243,37 @@
 }
 
 -(void)dealloc {
-    NSLog(@"AsyncLoader Deallocated");
+    if (LOG_METHOD_NAMES) {NSLog(@"[METHOD:] AsyncLoader [%@] Deallocated", _textTag);}
+}
+
+#pragma mark -
+#pragma mark Session Upload Delegate Methods
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
+    if (LOG_METHOD_NAMES) {NSLog(@"[METHOD:] %s", __FUNCTION__);}
+    //float status = (double)totalBytesSent / (double)totalBytesExpectedToSend;
+    //[[MTFileStreamer sharedFileStreamer] setCurrentStatus:status];
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+    if (LOG_METHOD_NAMES) {NSLog(@"[METHOD:] %s", __FUNCTION__);}
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
+    if (LOG_METHOD_NAMES) {NSLog(@"[METHOD:] %s", __FUNCTION__);}
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task willPerformHTTPRedirection:(NSHTTPURLResponse *)response
+        newRequest:(NSURLRequest *)request completionHandler:(void (^)(NSURLRequest *))completionHandler {
+    if (LOG_METHOD_NAMES) {NSLog(@"[METHOD:] %s", __FUNCTION__);}
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
+ completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler {
+    if (LOG_METHOD_NAMES) {NSLog(@"[METHOD:] %s", __FUNCTION__);}
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task needNewBodyStream:(void (^)(NSInputStream *bodyStream))completionHandler {
+    if (LOG_METHOD_NAMES) {NSLog(@"[METHOD:] %s", __FUNCTION__);}
 }
 
 @end

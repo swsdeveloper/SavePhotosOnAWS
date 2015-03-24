@@ -9,13 +9,13 @@
 /* Begin PBXBuildFile section */
 		0A0D12731ABF81A000609FBC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0D12721ABF81A000609FBC /* main.m */; };
 		0A0D127E1ABF81A000609FBC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A0D127D1ABF81A000609FBC /* Images.xcassets */; };
-		0A0D12811ABF81A000609FBC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A0D127F1ABF81A000609FBC /* LaunchScreen.xib */; };
 		0A0D128D1ABF81A000609FBC /* SavePhotosOnAWSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0D128C1ABF81A000609FBC /* SavePhotosOnAWSTests.m */; };
-		0A0D129F1ABF81F600609FBC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0D12971ABF81F600609FBC /* AppDelegate.m */; };
-		0A0D12A01ABF81F600609FBC /* AsyncLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0D12991ABF81F600609FBC /* AsyncLoader.m */; };
-		0A0D12A11ABF81F600609FBC /* ImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0D129C1ABF81F600609FBC /* ImageCache.m */; };
-		0A0D12A21ABF81F600609FBC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0D129E1ABF81F600609FBC /* ViewController.m */; };
-		0A0D12A41ABF824900609FBC /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A0D12A31ABF824900609FBC /* ViewController.xib */; };
+		0A0D129F1ABF81F600609FBC /* SWSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0D12971ABF81F600609FBC /* SWSAppDelegate.m */; };
+		0A0D12A01ABF81F600609FBC /* SWSAsyncLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0D12991ABF81F600609FBC /* SWSAsyncLoader.m */; };
+		0A0D12A11ABF81F600609FBC /* SWSImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0D129C1ABF81F600609FBC /* SWSImageCache.m */; };
+		0A0D12A21ABF81F600609FBC /* SWSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0D129E1ABF81F600609FBC /* SWSViewController.m */; };
+		0A0D12A41ABF824900609FBC /* SWSViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A0D12A31ABF824900609FBC /* SWSViewController.xib */; };
+		0A16D0371AC0C4EA00B8C031 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A16D0361AC0C4EA00B8C031 /* LaunchScreen.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,20 +33,20 @@
 		0A0D12711ABF81A000609FBC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A0D12721ABF81A000609FBC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0A0D127D1ABF81A000609FBC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		0A0D12801ABF81A000609FBC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		0A0D12861ABF81A000609FBC /* SavePhotosOnAWSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SavePhotosOnAWSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A0D128B1ABF81A000609FBC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A0D128C1ABF81A000609FBC /* SavePhotosOnAWSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SavePhotosOnAWSTests.m; sourceTree = "<group>"; };
-		0A0D12961ABF81F600609FBC /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../AppDelegate.h; sourceTree = "<group>"; };
-		0A0D12971ABF81F600609FBC /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ../AppDelegate.m; sourceTree = "<group>"; };
-		0A0D12981ABF81F600609FBC /* AsyncLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncLoader.h; path = ../AsyncLoader.h; sourceTree = "<group>"; };
-		0A0D12991ABF81F600609FBC /* AsyncLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AsyncLoader.m; path = ../AsyncLoader.m; sourceTree = "<group>"; };
-		0A0D129A1ABF81F600609FBC /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constants.h; path = ../Constants.h; sourceTree = "<group>"; };
-		0A0D129B1ABF81F600609FBC /* ImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageCache.h; path = ../ImageCache.h; sourceTree = "<group>"; };
-		0A0D129C1ABF81F600609FBC /* ImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageCache.m; path = ../ImageCache.m; sourceTree = "<group>"; };
-		0A0D129D1ABF81F600609FBC /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = ../ViewController.h; sourceTree = "<group>"; };
-		0A0D129E1ABF81F600609FBC /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = ../ViewController.m; sourceTree = "<group>"; };
-		0A0D12A31ABF824900609FBC /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
+		0A0D12961ABF81F600609FBC /* SWSAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SWSAppDelegate.h; path = ../SWSAppDelegate.h; sourceTree = "<group>"; };
+		0A0D12971ABF81F600609FBC /* SWSAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SWSAppDelegate.m; path = ../SWSAppDelegate.m; sourceTree = "<group>"; };
+		0A0D12981ABF81F600609FBC /* SWSAsyncLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SWSAsyncLoader.h; path = ../SWSAsyncLoader.h; sourceTree = "<group>"; };
+		0A0D12991ABF81F600609FBC /* SWSAsyncLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SWSAsyncLoader.m; path = ../SWSAsyncLoader.m; sourceTree = "<group>"; };
+		0A0D129A1ABF81F600609FBC /* SWSConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SWSConstants.h; path = ../SWSConstants.h; sourceTree = "<group>"; };
+		0A0D129B1ABF81F600609FBC /* SWSImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SWSImageCache.h; path = ../SWSImageCache.h; sourceTree = "<group>"; };
+		0A0D129C1ABF81F600609FBC /* SWSImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SWSImageCache.m; path = ../SWSImageCache.m; sourceTree = "<group>"; };
+		0A0D129D1ABF81F600609FBC /* SWSViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SWSViewController.h; path = ../SWSViewController.h; sourceTree = "<group>"; };
+		0A0D129E1ABF81F600609FBC /* SWSViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SWSViewController.m; path = ../SWSViewController.m; sourceTree = "<group>"; };
+		0A0D12A31ABF824900609FBC /* SWSViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWSViewController.xib; sourceTree = "<group>"; };
+		0A16D0361AC0C4EA00B8C031 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = Images.xcassets/LaunchScreen.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,18 +88,18 @@
 		0A0D126F1ABF81A000609FBC /* SavePhotosOnAWS */ = {
 			isa = PBXGroup;
 			children = (
-				0A0D129A1ABF81F600609FBC /* Constants.h */,
-				0A0D12961ABF81F600609FBC /* AppDelegate.h */,
-				0A0D12971ABF81F600609FBC /* AppDelegate.m */,
-				0A0D129D1ABF81F600609FBC /* ViewController.h */,
-				0A0D129E1ABF81F600609FBC /* ViewController.m */,
-				0A0D12981ABF81F600609FBC /* AsyncLoader.h */,
-				0A0D12991ABF81F600609FBC /* AsyncLoader.m */,
-				0A0D129B1ABF81F600609FBC /* ImageCache.h */,
-				0A0D129C1ABF81F600609FBC /* ImageCache.m */,
+				0A0D129A1ABF81F600609FBC /* SWSConstants.h */,
+				0A0D12961ABF81F600609FBC /* SWSAppDelegate.h */,
+				0A0D12971ABF81F600609FBC /* SWSAppDelegate.m */,
+				0A0D129D1ABF81F600609FBC /* SWSViewController.h */,
+				0A0D129E1ABF81F600609FBC /* SWSViewController.m */,
+				0A0D12981ABF81F600609FBC /* SWSAsyncLoader.h */,
+				0A0D12991ABF81F600609FBC /* SWSAsyncLoader.m */,
+				0A0D129B1ABF81F600609FBC /* SWSImageCache.h */,
+				0A0D129C1ABF81F600609FBC /* SWSImageCache.m */,
+				0A0D12A31ABF824900609FBC /* SWSViewController.xib */,
+				0A16D0361AC0C4EA00B8C031 /* LaunchScreen.xib */,
 				0A0D127D1ABF81A000609FBC /* Images.xcassets */,
-				0A0D12A31ABF824900609FBC /* ViewController.xib */,
-				0A0D127F1ABF81A000609FBC /* LaunchScreen.xib */,
 				0A0D12701ABF81A000609FBC /* Supporting Files */,
 			);
 			path = SavePhotosOnAWS;
@@ -211,8 +211,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A0D12811ABF81A000609FBC /* LaunchScreen.xib in Resources */,
-				0A0D12A41ABF824900609FBC /* ViewController.xib in Resources */,
+				0A0D12A41ABF824900609FBC /* SWSViewController.xib in Resources */,
+				0A16D0371AC0C4EA00B8C031 /* LaunchScreen.xib in Resources */,
 				0A0D127E1ABF81A000609FBC /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -231,11 +231,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A0D12A01ABF81F600609FBC /* AsyncLoader.m in Sources */,
-				0A0D129F1ABF81F600609FBC /* AppDelegate.m in Sources */,
-				0A0D12A11ABF81F600609FBC /* ImageCache.m in Sources */,
+				0A0D12A01ABF81F600609FBC /* SWSAsyncLoader.m in Sources */,
+				0A0D129F1ABF81F600609FBC /* SWSAppDelegate.m in Sources */,
+				0A0D12A11ABF81F600609FBC /* SWSImageCache.m in Sources */,
 				0A0D12731ABF81A000609FBC /* main.m in Sources */,
-				0A0D12A21ABF81F600609FBC /* ViewController.m in Sources */,
+				0A0D12A21ABF81F600609FBC /* SWSViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,17 +256,6 @@
 			targetProxy = 0A0D12871ABF81A000609FBC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		0A0D127F1ABF81A000609FBC /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0A0D12801ABF81A000609FBC /* Base */,
-			);
-			name = LaunchScreen.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		0A0D128E1ABF81A000609FBC /* Debug */ = {
@@ -420,6 +409,7 @@
 				0A0D12921ABF81A000609FBC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0A0D12931ABF81A000609FBC /* Build configuration list for PBXNativeTarget "SavePhotosOnAWSTests" */ = {
 			isa = XCConfigurationList;
@@ -428,6 +418,7 @@
 				0A0D12951ABF81A000609FBC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
